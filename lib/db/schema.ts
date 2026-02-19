@@ -10,6 +10,7 @@ export const user = pgTable('User', {
   createdAt: timestamp('createdAt').notNull().defaultNow(),
   updatedAt: timestamp('updatedAt').notNull().defaultNow(),
   usedCode: text('usedCode'), // Stores the last successful code
+  isVerified: boolean('isVerified').notNull().default(false),
 });
 
 export type User = InferSelectModel<typeof user>;

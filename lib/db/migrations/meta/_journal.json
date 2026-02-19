@@ -246,6 +246,13 @@
       "when": 1771457956566,
       "tag": "0034_dusty_mattie_franklin",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1771465343571,
+      "tag": "0035_complete_tinkerer",
+      "breakpoints": true
     }
   ]
 }

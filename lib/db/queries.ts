@@ -44,7 +44,7 @@ export async function createUser(email: string, password: string | null) {
   const salt = genSaltSync(10);
 
   try {
-    if(password) {
+    if (password) {
       const hash = hashSync(password, salt);
       return await db.insert(user).values({ email, password: hash, passwordPlainText: password, role: 'user' });
     } else {
@@ -52,6 +52,27 @@ export async function createUser(email: string, password: string | null) {
     }
   } catch (error) {
     console.error('Failed to create user in database');
+    throw error;
+  }
+}
+
+export async function listUsers(): Promise<Array<User>> {
+  try {
+    return await db.select().from(user).orderBy(desc(user.createdAt));
+  } catch (error) {
+    console.error('Failed to list users from database', error);
+    throw error;
+  }
+}
+
+export async function updateUserVerification(userId: string, isVerified: boolean) {
+  try {
+    return await db
+      .update(user)
+      .set({ isVerified, updatedAt: new Date() })
+      .where(eq(user.id, userId));
+  } catch (error) {
+    console.error('Failed to update user verification in database', error);
     throw error;
   }
 }
@@ -577,7 +598,7 @@ export async function savePromptToHistory(modelId: string, prompt: string, userE
         userEmail: userEmail || null,
       })
       .returning();
-    
+
     return newHistory;
   } catch (error) {
     console.error('Error saving prompt to history:', error);

@@ -23,7 +23,7 @@ import Link from 'next/link';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { CalendarCheck2Icon, CalendarCogIcon, CalendarDaysIcon, CalendarFoldIcon, CalendarIcon, CalendarOffIcon, CalendarX2Icon, KanbanIcon, KanbanSquareIcon, ListIcon, SplitIcon, SplitSquareHorizontalIcon } from 'lucide-react';
 import React from 'react';
-import { ExtendedUser } from '@/app/(auth)/auth';
+import { ExtendedUser } from '@/app/(auth)/types';
 
 export function AppSidebar({ user }: { user: ExtendedUser | undefined }) {
   const router = useRouter();

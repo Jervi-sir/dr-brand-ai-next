@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Toaster } from 'sonner';
 
 import { ThemeProvider } from '@/components/theme-provider';
+import NextAuthProvider from '@/components/next-auth-provider';
 // import { Inter } from 'next/font/google'
 
 // If loading a variable font, you don't need to specify the font weight
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport = {
-  maximumScale: 1, 
+  maximumScale: 1,
 };
 
 const LIGHT_THEME_COLOR = 'hsl(0 0% 100%)';
@@ -47,7 +48,7 @@ export default async function RootLayout({
             __html: THEME_COLOR_SCRIPT,
           }}
         />
-         {/* <script
+        {/* <script
           dangerouslySetInnerHTML={{
             __html: IN_APP_BROWSER_REDIRECT_SCRIPT,
           }}
@@ -60,8 +61,10 @@ export default async function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <Toaster position="top-center" />
-          {children}
+          <NextAuthProvider>
+            <Toaster position="top-center" />
+            {children}
+          </NextAuthProvider>
         </ThemeProvider>
       </body>
     </html>

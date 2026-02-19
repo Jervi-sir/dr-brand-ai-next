@@ -1,10 +1,10 @@
 "use client"
 
 import * as React from "react"
-import { Bot, ChartArea, Code2, Command, HistoryIcon, Settings2, SplitIcon, SplitSquareHorizontal, SquareTerminal, TowerControlIcon, Unlock, X, } from "lucide-react"
+import { Bot, ChartArea, Code2, Command, HistoryIcon, Settings2, SplitIcon, SplitSquareHorizontal, SquareTerminal, TowerControlIcon, Unlock, Users, X, } from "lucide-react"
 
-import { 
-  Sidebar, SidebarContent, SidebarFooter, SidebarHeader, useSidebar, 
+import {
+  Sidebar, SidebarContent, SidebarFooter, SidebarHeader, useSidebar,
   SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem
 } from "@/components/ui/sidebar"
 import { ChevronRight, type LucideIcon } from "lucide-react"
@@ -19,6 +19,11 @@ const data = {
       title: "Analytics",
       url: "/dashboard",
       icon: ChartArea,
+    },
+    {
+      title: "Users",
+      url: "/dashboard/users",
+      icon: Users,
     },
     // {
     //   title: "Models",
@@ -114,7 +119,7 @@ export function NavMain({
   const pathname = usePathname()
   return (
     <SidebarGroup>
-      { label
+      {label
         &&
         <SidebarGroupLabel>{label}</SidebarGroupLabel>
       }

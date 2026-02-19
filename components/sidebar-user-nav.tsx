@@ -18,7 +18,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
-import { ExtendedUser } from '@/app/(auth)/auth';
+import { ExtendedUser } from '@/app/(auth)/types';
 import { useRouter } from 'next/navigation';
 
 export function SidebarUserNav({ user }: { user: ExtendedUser }) {
@@ -49,7 +49,7 @@ export function SidebarUserNav({ user }: { user: ExtendedUser }) {
             side="top"
             className="w-[--radix-popper-anchor-width]"
           >
-             {user.role === 'admin' && (
+            {user.role === 'admin' && (
               <DropdownMenuItem
                 className="cursor-pointer"
                 onSelect={goToDashboard} // Call function on select
@@ -70,7 +70,7 @@ export function SidebarUserNav({ user }: { user: ExtendedUser }) {
                 className="w-full cursor-pointer"
                 onClick={() => {
                   signOut({
-                    redirectTo: process.env.AUTH_TRUST_HOST ,
+                    redirectTo: process.env.AUTH_TRUST_HOST,
                   });
                 }}
               >
