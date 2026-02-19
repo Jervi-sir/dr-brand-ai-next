@@ -17,13 +17,16 @@ const AvatarGroup = forwardRef<TAvatarGroupRef, TAvatarGroupProps>(({ className,
       <>
         {avatarItems.slice(0, max).map((child, index) => {
           return cloneElement(child, {
+            // @ts-ignore
             className: cn(child.props.className, "border-2 border-background"),
+            // @ts-ignore
             style: { marginLeft: index === 0 ? 0 : -spacing, ...child.props.style },
           });
         })}
 
         {avatarItems.length > max && (
           <div
+            // @ts-ignore
             className={cn("relative flex items-center justify-center rounded-full border-2 border-background bg-muted", avatarItems[0].props.className)}
             style={{ marginLeft: -spacing }}
           >

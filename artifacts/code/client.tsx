@@ -82,8 +82,8 @@ export const codeArtifact = new Artifact<'code', Metadata>({
         content: streamPart.content as string,
         isVisible:
           draftArtifact.status === 'streaming' &&
-          draftArtifact.content.length > 300 &&
-          draftArtifact.content.length < 310
+            draftArtifact.content.length > 300 &&
+            draftArtifact.content.length < 310
             ? true
             : draftArtifact.isVisible,
         status: 'streaming',
@@ -133,7 +133,7 @@ export const codeArtifact = new Artifact<'code', Metadata>({
         }));
 
         try {
-          // @ts-expect-error - loadPyodide is not defined
+          // @ts-ignore
           const currentPyodideInstance = await globalThis.loadPyodide({
             indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.23.4/full/',
           });

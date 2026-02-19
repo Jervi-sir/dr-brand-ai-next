@@ -56,7 +56,7 @@ This template ships with OpenAI `gpt-4o` as the default. However, with the [AI S
 ### run the server
 
 1. `pnpm run build`
-2. `npx next run -p 3001`
+2. `npx next run -p 6030`
 3. or use `pm2 start npm --name "dr-ai" -- start`
 
 ### update the db 

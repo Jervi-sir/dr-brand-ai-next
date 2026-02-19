@@ -96,23 +96,23 @@ export async function POST(request: Request) {
       const endTime = performance.now();
       const duration = (endTime - startTime) / 1000; // Convert ms to seconds
 
+      await saveChat({ id, userId: session.user.id, title });
+
       try {
-        await (db.insert(openAiApiUsage) as any).values({
+        await db.insert(openAiApiUsage).values({
           id: generateUUID(),
-          chatId: id || null,
+          chatId: id,
           model: 'gpt-4.1-nano-2025-04-14',
           type: 'title-generation',
           promptTokens: usage?.promptTokens || 0,
           completionTokens: usage?.completionTokens || 0,
           totalTokens: usage?.totalTokens || (usage?.promptTokens || 0) + (usage?.completionTokens || 0),
-          duration: duration || null,
+          duration: (duration as any) || null,
           completedAt: new Date(),
         });
       } catch (error) {
         console.error('Failed to save token usage for title generation:', error);
       }
-
-      await saveChat({ id, userId: session.user.id, title });
     } else {
       if (chat.userId !== session.user.id) {
         return new Response('Unauthorized', { status: 401 });
@@ -134,64 +134,66 @@ export async function POST(request: Request) {
         // Start timing
         const startTime = performance.now();
         const result = streamText({
-          model: openai(modelDetails.name),//myProvider.languageModel(selectedChatModel),
-          system: modelDetails.customPrompts || undefined,//systemPrompt({ selectedChatModel }),
+          model: openai(modelDetails.name),
+          system: modelDetails.customPrompts || undefined,
           messages: messagesToSendToAi,
-          temperature: modelDetails.temperature as number,
-          maxTokens: modelDetails.maxTokens as number,
+          temperature: (modelDetails.temperature as number) || 0.7,
+          // @ts-ignore
+          maxCompletionTokens: (modelDetails.maxTokens as number) || 2048,
           maxSteps: 1,
           onFinish: async ({ response, reasoning, usage }) => {
             if (session.user?.id) {
               try {
                 // Calculate duration in seconds
                 const endTime = performance.now();
-                const duration = (endTime - startTime) / 1000; // Convert ms to seconds
+                const duration = (endTime - startTime) / 1000;
 
                 const sanitizedResponseMessages = sanitizeResponseMessages({
-                  messages: response.messages,
+                  messages: response.messages as any,
                   reasoning,
                 }).map((message) => ({
-                  // ...message,
                   chatId: id,
                   role: message.role,
                   content: message.content,
                   createdAt: new Date(),
-                  model: modelDetails.name, // Set the model used
-                  promptTokens: usage?.promptTokens || null, // From provider
-                  completionTokens: usage?.completionTokens || null, // From provider
-                  totalTokens: usage?.totalTokens || null, // From provider
-                  duration: duration || null, // Optional: track duration if available
-                  annotations: [{
-                    duration, // Add duration to annotations
-                    promptTokens: usage?.promptTokens || null,
-                    completionTokens: usage?.completionTokens || null,
-                    totalTokens: usage?.totalTokens || null,
-                  }],
+                  model: modelDetails.name,
+                  promptTokens: usage?.promptTokens || null,
+                  completionTokens: usage?.completionTokens || null,
+                  totalTokens: usage?.totalTokens || null,
+                  duration: duration || null,
+                  annotations: (message as any).annotations || [
+                    {
+                      duration,
+                      promptTokens: usage?.promptTokens || null,
+                      completionTokens: usage?.completionTokens || null,
+                      totalTokens: usage?.totalTokens || null,
+                    },
+                  ],
                 }));
 
                 await saveMessages({ messages: sanitizedResponseMessages as any });
+
                 // Insert into OpenAiApiUsage
-                await (db.insert(openAiApiUsage) as any).values({
-                  id: generateUUID(), // Generate a new UUID
+                await db.insert(openAiApiUsage).values({
+                  id: generateUUID(),
                   chatId: id,
                   model: modelDetails.name,
-                  type: 'chat', // Define type (e.g., 'chat', 'tool'); adjust as needed
-                  promptTokens: usage?.promptTokens || 0, // Default to 0 if not provided
-                  completionTokens: usage?.completionTokens || 0, // Default to 0 if not provided
-                  totalTokens: usage?.totalTokens || (usage?.promptTokens || 0) + (usage?.completionTokens || 0), // Calculate if not provided
-                  duration: duration as number || null,
+                  type: 'chat',
+                  promptTokens: usage?.promptTokens || 0,
+                  completionTokens: usage?.completionTokens || 0,
+                  totalTokens: usage?.totalTokens || (usage?.promptTokens || 0) + (usage?.completionTokens || 0),
+                  duration: (duration as any) || null,
                   completedAt: new Date(),
                 });
 
                 dataStream.writeMessageAnnotation({
-                  duration, // Add duration to annotations
+                  duration,
                   promptTokens: usage?.promptTokens || null,
                   completionTokens: usage?.completionTokens || null,
                   totalTokens: usage?.totalTokens || null,
                 });
-
               } catch (error) {
-                console.error('Failed to save chat');
+                console.error('Failed to save chat or usage tracking:', error);
               }
             }
           },
@@ -201,22 +203,22 @@ export async function POST(request: Request) {
           },
         });
 
-        result.consumeStream();
-
-
         result.mergeIntoDataStream(dataStream, {
           sendReasoning: true,
           sendUsage: true,
         });
-
-        // return NextResponse.json({ result }, { status: 200 });
       },
-      onError: () => {
-        return 'Oops, an error occured!';
+      onError: (error) => {
+        console.error('DataStream error:', error);
+        return 'Oops, an error occured while streaming!';
       },
     });
   } catch (error) {
-    return NextResponse.json({ error }, { status: 400 });
+    console.error('Chat API Error:', error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 400 }
+    );
   }
 }
 

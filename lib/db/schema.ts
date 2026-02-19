@@ -96,6 +96,7 @@ export const suggestion = pgTable(
     documentRef: foreignKey({
       columns: [table.documentId, table.documentCreatedAt],
       foreignColumns: [document.id, document.createdAt],
+      name: 'suggestion_document_fk',
     }),
   }),
 );
@@ -110,7 +111,7 @@ export type Suggestion = InferSelectModel<typeof suggestion>;
 */
 export const openAiApiUsage = pgTable('OpenAiApiUsage', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
-  chatId: uuid('chatId').notNull().references(() => chat.id).references(() => chat.id, { onDelete: 'cascade' }), // Add cascade,
+  chatId: uuid('chatId').references(() => chat.id, { onDelete: 'cascade' }), // Add cascade,
   model: varchar('model', { length: 64 }).notNull(),
   type: varchar('type', { length: 64 }).notNull(),
   promptTokens: integer('promptTokens').notNull(),
@@ -170,7 +171,7 @@ export const aiModel = pgTable('AIModel', {
 
   customPrompts: text('customPrompts'), // Nullable
 
-  inputPrice: decimal('inputPrice', { precision: 10, scale: 4 }), 
+  inputPrice: decimal('inputPrice', { precision: 10, scale: 4 }),
   outputPrice: decimal('outputPrice', { precision: 10, scale: 4 }),
   cachedInputPrice: decimal('cachedInputPrice', { precision: 10, scale: 4 }),
 });
@@ -271,10 +272,10 @@ export const content = pgTable('Content', {
   createdAt: timestamp('createdAt').notNull().defaultNow(),
   updatedAt: timestamp('updatedAt').notNull().defaultNow(),
 },
-(table) => ({
-  calendarIdx: index('idx_content_stage_scheduledDate').on(table.stage, table.scheduledDate),
-  deadlineIdx: index('idx_content_stage_deadline').on(table.stage, table.deadline), // Optional
-})
+  (table) => ({
+    calendarIdx: index('idx_content_stage_scheduledDate').on(table.stage, table.scheduledDate),
+    deadlineIdx: index('idx_content_stage_deadline').on(table.stage, table.deadline), // Optional
+  })
 );
 export const scriptHistory = pgTable(
   'ScriptHistory',

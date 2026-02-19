@@ -14,6 +14,11 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { DeleteConfirmationDialog } from "./delete-confirmation-dialog";
 
 const modelOptions = [
+  { name: "gpt-5.2-2025-12-11", inputPrice: 1.75, outputPrice: 14.00, cachedInputPrice: 0.175 },
+  { name: "gpt-5-mini-2025-08-07", inputPrice: 0.25, outputPrice: 2.00, cachedInputPrice: 0.025 },
+  { name: "gpt-5-nano-2025-08-07", inputPrice: 0.05, outputPrice: 0.4, cachedInputPrice: 0.005 },
+
+
   { name: "gpt-4.1-nano-2025-04-14", inputPrice: 0.10, outputPrice: 0.40, cachedInputPrice: 0.00 },
   { name: "gpt-4.1-mini-2025-04-14", inputPrice: 0.40, outputPrice: 1.60, cachedInputPrice: 0.00 },
   { name: "gpt-4.1-2025-04-14", inputPrice: 2.00, outputPrice: 8.00, cachedInputPrice: 0.00 },
@@ -23,8 +28,6 @@ const modelOptions = [
   { name: "gpt-5-2025-08-07", inputPrice: 1.25, outputPrice: 10, cachedInputPrice: 0.125 },
   { name: "gpt-5-chat-latest", inputPrice: 1.25, outputPrice: 10, cachedInputPrice: 0.125 },
 
-  { name: "gpt-5-mini-2025-08-07", inputPrice: 0.25, outputPrice: 2.00, cachedInputPrice: 0.025 },
-  { name: "gpt-5-nano-2025-08-07", inputPrice: 0.05, outputPrice: 0.4, cachedInputPrice: 0.005 },
   // { name: "chatgpt-4o-latest", inputPrice: 5.00, outputPrice: 15.00, cachedInputPrice: 0.00 }
 ];
 
@@ -211,10 +214,10 @@ function FormData({ model, onModelUpdate, setSelectedModel }: any) {
               {isEditing ? 'Stop Editing' : 'Enable Edit'}
             </Button>
             {formData.id && (
-                <Button
-                  variant="destructive"
-                  onClick={() => setIsDeleteDialogOpen(true)} // Open dialog instead of deleting
-                >
+              <Button
+                variant="destructive"
+                onClick={() => setIsDeleteDialogOpen(true)} // Open dialog instead of deleting
+              >
                 Delete
               </Button>
             )}

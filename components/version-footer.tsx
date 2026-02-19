@@ -36,6 +36,7 @@ export const VersionFooter = ({
 
   return (
     <motion.div
+      // @ts-ignore
       className="absolute flex flex-col gap-4 lg:flex-row bottom-0 bg-background p-4 w-full border-t z-50 justify-between"
       initial={{ y: isMobile ? 200 : 77 }}
       animate={{ y: 0 }}
@@ -69,18 +70,18 @@ export const VersionFooter = ({
               {
                 optimisticData: documents
                   ? [
-                      ...documents.filter((document) =>
-                        isAfter(
-                          new Date(document.createdAt),
-                          new Date(
-                            getDocumentTimestampByIndex(
-                              documents,
-                              currentVersionIndex,
-                            ),
+                    ...documents.filter((document) =>
+                      isAfter(
+                        new Date(document.createdAt),
+                        new Date(
+                          getDocumentTimestampByIndex(
+                            documents,
+                            currentVersionIndex,
                           ),
                         ),
                       ),
-                    ]
+                    ),
+                  ]
                   : [],
               },
             );

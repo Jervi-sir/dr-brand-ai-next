@@ -13,4 +13,8 @@ export default defineConfig({
     // biome-ignore lint: Forbidden non-null assertion.
     url: process.env.POSTGRES_URL!,
   },
+  migrations: {
+    table: '__drizzle_migrations',
+    schema: 'public',
+  },
 });

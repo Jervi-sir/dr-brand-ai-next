@@ -53,7 +53,7 @@ export function Chat({
     reload,
   }: any = useChat({
     id,
-    body: { id, selectedChatModelID: selectedChatModelID, usedCode: usedCode },
+    body: { id, selectedChatModelID: selectedModelID, usedCode: usedCode },
     initialMessages,
     experimental_throttle: 100,
     sendExtraMessageFields: true,

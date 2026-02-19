@@ -1,0 +1,1 @@
+ALTER TABLE "OpenAiApiUsage" ALTER COLUMN "chatId" DROP NOT NULL;

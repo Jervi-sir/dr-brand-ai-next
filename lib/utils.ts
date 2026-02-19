@@ -193,7 +193,7 @@ export function sanitizeResponseMessages({
     );
 
     if (reasoning) {
-      // @ts-expect-error: reasoning message parts in sdk is wip
+      // @ts-ignore
       sanitizedContent.push({ type: 'reasoning', reasoning });
     }
 

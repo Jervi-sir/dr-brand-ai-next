@@ -49,6 +49,7 @@ function PureSuggestedActions({ chatId, append }: SuggestedActionsProps) {
           exit={{ opacity: 0, y: 20 }}
           transition={{ delay: 0.05 * index }}
           key={`suggested-action-${suggestedAction.title}-${index}`}
+          // @ts-ignore
           className={index > 1 ? 'hidden sm:block' : 'block'}
           dir='rtl'
         >

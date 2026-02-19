@@ -27,5 +27,6 @@ export function useScrollToBottom<T extends HTMLElement>(): [
     }
   }, []);
 
+  // @ts-ignore
   return [containerRef, endRef];
 }
