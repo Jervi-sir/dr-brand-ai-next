@@ -49,7 +49,7 @@ export async function POST(request: Request) {
       model: openai(API_CONFIG.MODEL),
       prompt,
       temperature: API_CONFIG.TEMPERATURE,
-      maxTokens: API_CONFIG.MAX_TOKENS,
+      // maxTokens: API_CONFIG.MAX_TOKENS,
     });
 
     let cleanedText = text.trim().replace(/^```json\s*|\s*```$/g, '').trim();

@@ -2,7 +2,7 @@
 export const API_CONFIG = {
   MAX_TOKENS: 3000,
   TEMPERATURE: 1,
-  MODEL: 'gpt-4.1-2025-04-14',
+  MODEL: 'gpt-5.2-2025-12-11',
 };
 
 export const CONTENT_IDEAS = [
