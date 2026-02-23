@@ -27,6 +27,8 @@ export const Form1 = () => {
     setMode, // Add mode and setMode from context
   } = useScriptGenerator();
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [timer, setTimer] = useState(180); // 3 minutes in seconds
+
   const form = useForm<FormData>({
     defaultValues: { userPrompt },
     resolver: async (data) => {
@@ -69,6 +71,24 @@ export const Form1 = () => {
     if (percentage <= 70) return 'text-green-500';
     if (percentage <= 90) return 'text-yellow-500';
     return 'text-red-500';
+  };
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isLoadingSubPillars && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    } else if (!isLoadingSubPillars) {
+      setTimer(180);
+    }
+    return () => clearInterval(interval);
+  }, [isLoadingSubPillars, timer]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   const onSubmit = async () => {
@@ -124,8 +144,8 @@ export const Form1 = () => {
             <p className={cn('text-xs mt-1 text-right', getCharCountColor(userPrompt.length))}>
               {userPrompt.length}/{maxCharacter}
             </p>
-            <Button type="submit" disabled={isLoadingSubPillars}>
-              {isLoadingSubPillars ? 'Generating...' : mode === 'automatic' ? 'Generate Scripts Auto' : 'Generate Sub-Pillars'}
+            <Button type="submit" disabled={isLoadingSubPillars} className="min-w-[140px]">
+              {isLoadingSubPillars ? `Generating... (${formatTime(timer)})` : mode === 'automatic' ? 'Generate Scripts Auto' : 'Generate Sub-Pillars'}
             </Button>
           </div>
         </div>

@@ -3,10 +3,10 @@ import { openai } from '@ai-sdk/openai';
 import { NextResponse } from 'next/server';
 import { auth } from '@/app/(auth)/auth';
 
+export const dynamic = 'force-dynamic';
+
 const API_CONFIG = {
-  MAX_TOKENS: 750,
-  TEMPERATURE: 0.7,
-  MODEL: 'gpt-4.1-2025-04-14',
+  MODEL: 'gpt-5-mini-2025-08-07',
   MAX_RETRIES: 3,
 };
 
@@ -61,10 +61,9 @@ export async function POST(request: Request) {
     while (attempts < API_CONFIG.MAX_RETRIES) {
       attempts++;
       const { text } = await generateText({
-        model: openai('gpt-5-nano-2025-08-07'),
+        model: openai(API_CONFIG.MODEL),
         prompt,
-        temperature: API_CONFIG.TEMPERATURE,
-        maxTokens: API_CONFIG.MAX_TOKENS,
+        temperature: 1,
       });
 
       let cleanedText = text
@@ -75,9 +74,9 @@ export async function POST(request: Request) {
         .trim();
 
       if (!isValidJson(cleanedText)) {
-        // console.warn(`Attempt ${attempts} invalid JSON:`, cleanedText.slice(0, 100), '...');
+        console.warn(`Attempt ${attempts} invalid JSON:`, cleanedText.slice(0, 100), '...');
         if (attempts === API_CONFIG.MAX_RETRIES) {
-          // console.error('Max retries reached. Returning fallback response.');
+          console.error('Max retries reached. Returning fallback response.');
           return NextResponse.json({
             contentPillar: 'غير متوفر',
             subPillars: [],
@@ -100,10 +99,10 @@ export async function POST(request: Request) {
         }
         break;
       } catch (parseError: any) {
-        // console.warn(`Attempt ${attempts} failed to parse AI response:`, parseError);
-        // console.warn('Cleaned Text:', cleanedText);
+        console.warn(`Attempt ${attempts} failed to parse AI response:`, parseError);
+        console.warn('Cleaned Text:', cleanedText);
         if (attempts === API_CONFIG.MAX_RETRIES) {
-          // console.error('Max retries reached. Returning fallback response.');
+          console.error('Max retries reached. Returning fallback response.');
           return NextResponse.json({
             contentPillar: 'غير متوفر',
             subPillars: [],
@@ -123,7 +122,7 @@ export async function POST(request: Request) {
       clientPersona: responseData.clientPersona,
     });
   } catch (error: any) {
-    // console.error('Error generating sub-pillars:', error);
+    console.error('Error generating sub-pillars:', error);
     return NextResponse.json({ error: 'Failed to generate sub-pillars', details: error.message }, { status: 500 });
   }
 }

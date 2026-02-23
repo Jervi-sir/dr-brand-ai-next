@@ -13,9 +13,7 @@ import { db } from '@/lib/db/queries';
 export const dynamic = 'force-dynamic';
 
 const API_CONFIG = {
-  MAX_TOKENS: 20000, // Increased to prevent truncation
-  TEMPERATURE: 0.7, // Lowered for structured output
-  MODEL: 'gpt-4.1-nano-2025-04-14',
+  MODEL: 'gpt-5.2-2025-12-11',
   MAX_RETRIES: 4, // Increased retries
   RETRY_DELAY_MS: 1000,
 };
@@ -236,10 +234,9 @@ export async function POST(request: NextRequest) {
 
       try {
         const { text, usage } = await generateText({
-          model: openai(currentPrompt[0]?.modelCodeName || 'gpt-4o-mini-2024-07-18'),
+          model: openai(currentPrompt[0]?.modelCodeName || API_CONFIG.MODEL),
           prompt,
-          temperature: API_CONFIG.TEMPERATURE,
-          maxTokens: API_CONFIG.MAX_TOKENS,
+          temperature: 1,
         });
         thisUsage = {
           promptTokens: usage?.promptTokens || 0,

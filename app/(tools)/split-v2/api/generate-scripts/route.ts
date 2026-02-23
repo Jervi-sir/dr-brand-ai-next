@@ -13,9 +13,7 @@ import { db } from '@/lib/db/queries';
 export const dynamic = 'force-dynamic';
 
 const API_CONFIG = {
-  MAX_TOKENS: 3000,
-  TEMPERATURE: 1,
-  MODEL: 'gpt-4o', // Using a reliable model (adjust if needed)
+  MODEL: 'gpt-5.2-2025-12-11', // Using a reliable model (adjust if needed)
   MAX_RETRIES: 3,
   RETRY_DELAY_MS: 1000,
 };
@@ -188,10 +186,9 @@ export async function POST(request: NextRequest) {
       try {
         console.log(`Attempt ${attempts}: Generating scripts with prompt length: ${prompt.length}`);
         const { text, usage } = await generateText({
-          model: openai(currentPrompt[0]?.modelCodeName || 'gpt-4o-mini-2024-07-18'),
+          model: openai(currentPrompt[0]?.modelCodeName || API_CONFIG.MODEL),
           prompt,
-          temperature: API_CONFIG.TEMPERATURE,
-          maxTokens: API_CONFIG.MAX_TOKENS,
+          temperature: 1,
         });
         thisUsage = {
           promptTokens: usage?.promptTokens || 0,
@@ -287,6 +284,6 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   } finally {
-   
+
   }
 }
